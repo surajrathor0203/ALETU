@@ -14,9 +14,22 @@ dotenv.config();
 const port = process.env.PORT || 8000;
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  strict: true,  // Enforce schema validation
+})
+.then(() => {
+  console.log('MongoDB connected');
+  // Verify indexes
+  mongoose.connection.db.listCollections().toArray((err, collections) => {
+    console.log('Available collections:', collections);
+  });
+})
+.catch(err => console.log('MongoDB connection error:', err));
+
+// Enable debugging for Mongoose
+mongoose.set('debug', true);
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
@@ -26,11 +39,6 @@ securityMiddleware(app);
 
 // Use routes
 app.use('/api/users', userRoutes);
-
-// Define a basic route
-// app.get('/', (req, res) => {
-//   res.send('Hello World!');
-// });
 
 // Handle 404 errors
 app.use((req, res, next) => {
