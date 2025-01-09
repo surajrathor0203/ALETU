@@ -14,13 +14,13 @@ const APPROVED_INSTITUTES = [
 // Registration route
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, role, phone, institute, instituteId } = req.body;
+    const { username, email, password, role, phone, countryCode, institute, instituteId } = req.body;
     
     // Log complete request
     console.log('Complete request body:', req.body);
 
     // Validate all required fields
-    const requiredFields = ['username', 'email', 'password', 'role', 'phone', 'institute', 'instituteId'];
+    const requiredFields = ['username', 'email', 'password', 'role', 'phone', 'countryCode', 'institute', 'instituteId'];
     const missingFields = requiredFields.filter(field => !req.body[field]);
     
     if (missingFields.length > 0) {
@@ -28,6 +28,12 @@ router.post('/register', async (req, res) => {
         message: 'Missing required fields',
         missingFields
       });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already registered' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -38,6 +44,7 @@ router.post('/register', async (req, res) => {
       password: hashedPassword,
       role,
       phone,
+      countryCode,
       institute,
       instituteId
     });
@@ -88,11 +95,11 @@ router.post('/login', async (req, res) => {
         id: user._id,
         username: user.username,
         email: user.email,
-        role:user.role,
-        phone:user.phone,
-        institute:user.institute,
-        instituteId:user.instituteId,
-
+        role: user.role,
+        phone: user.phone,
+        countryCode: user.countryCode,
+        institute: user.institute,
+        instituteId: user.instituteId,
       }
     });
   } catch (error) {
