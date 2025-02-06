@@ -38,4 +38,4 @@ yarn-error.log*
 
 # Service accounts and secrets
 firebase-service-account.json
-*-service-account.json
+*-service-account.jsonserver/.env
