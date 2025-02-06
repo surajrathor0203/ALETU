@@ -1,0 +1,51 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+}
+
+#playButton, #continueButton {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#continueButton {
+  display: none;  /* Hidden initially */
+}
+
+#canvasWrapper {
+  position: relative;
+  width: 800px;
+  height: 400px;
+  background-color: black;
+  padding: 20px;
+  overflow: hidden;
+  margin: 0 auto;
+  border: 1px solid #fff;
+}
+
+#hand {
+  position: absolute;
+  width: 80px;
+  height: auto;
+  transform: rotate(-45deg);
+  pointer-events: none;
+  display: none;
+  z-index: 1000;
+  transform-origin: 20% 80%;
+  margin-left: -20px;
+  margin-top: -40px;
+}
+
+.disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
